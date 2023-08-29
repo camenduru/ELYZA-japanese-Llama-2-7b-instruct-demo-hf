@@ -561,4 +561,4 @@ graphvizで、AからB、BからC、CからAに有向エッジが生えている
         outputs=output_textbox,
     )
 
-demo.queue(max_size=5).launch()
+demo.queue(max_size=5).launch(share=True)
