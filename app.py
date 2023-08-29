@@ -100,7 +100,17 @@ def generate(
         raise ValueError
 
     history = history_with_input[:-1]
-    generator = run(message, history, system_prompt, max_new_tokens, temperature, top_p, top_k, do_sample, repetition_penalty)
+    generator = run(
+        message,
+        history,
+        system_prompt,
+        max_new_tokens,
+        float(temperature),
+        float(top_p),
+        top_k,
+        do_sample,
+        float(repetition_penalty),
+    )
     try:
         first_response = next(generator)
         yield history + [(message, first_response)]
@@ -130,7 +140,12 @@ def process_example(message: str) -> tuple[str, list[tuple[str, str]]]:
 def check_input_token_length(message: str, chat_history: list[tuple[str, str]], system_prompt: str) -> None:
     input_token_length = get_input_token_length(message, chat_history, system_prompt)
     if input_token_length > MAX_INPUT_TOKEN_LENGTH:
-        raise gr.Error(f'合計対話長が長すぎます ({input_token_length} > {MAX_INPUT_TOKEN_LENGTH})。「🗑️  これまでの出力を消す」ボタンを押してから再実行してください。')
+        raise gr.Error(
+            f"合計対話長が長すぎます ({input_token_length} > {MAX_INPUT_TOKEN_LENGTH})。入力文章を短くするか、「🗑️  これまでの出力を消す」ボタンを押してから再実行してください。"
+        )
+
+    if len(message) <= 0:
+        raise gr.Error("入力が空です。1文字以上の文字列を入力してください。")
 
 
 def convert_history_to_str(history: list[tuple[str, str]]) -> str:
@@ -360,6 +375,11 @@ graphvizで、AからB、BからC、CからAに有向エッジが生えている
         api_name=False,
         queue=False,
     ).then(
+        fn=check_input_token_length,
+        inputs=[saved_input, chatbot, system_prompt],
+        api_name=False,
+        queue=False,
+    ).success(
         fn=display_input,
         inputs=[saved_input, chatbot],
         outputs=chatbot,
@@ -373,11 +393,6 @@ graphvizで、AからB、BからC、CからAに有向エッジが生えている
         fn=output_log,
         inputs=[chatbot, uuid_list],
     ).then(
-        fn=check_input_token_length,
-        inputs=[saved_input, chatbot, system_prompt],
-        api_name=False,
-        queue=False,
-    ).success(
         fn=generate,
         inputs=[
             saved_input,
@@ -412,6 +427,11 @@ graphvizで、AからB、BからC、CからAに有向エッジが生えている
         api_name=False,
         queue=False,
     ).then(
+        fn=check_input_token_length,
+        inputs=[saved_input, chatbot, system_prompt],
+        api_name=False,
+        queue=False,
+    ).success(
         fn=display_input,
         inputs=[saved_input, chatbot],
         outputs=chatbot,
@@ -424,11 +444,6 @@ graphvizで、AからB、BからC、CからAに有向エッジが生えている
     ).then(
         fn=output_log,
         inputs=[chatbot, uuid_list],
-    ).then(
-        fn=check_input_token_length,
-        inputs=[saved_input, chatbot, system_prompt],
-        api_name=False,
-        queue=False,
     ).success(
         fn=generate,
         inputs=[
@@ -464,6 +479,11 @@ graphvizで、AからB、BからC、CからAに有向エッジが生えている
         api_name=False,
         queue=False,
     ).then(
+        fn=check_input_token_length,
+        inputs=[saved_input, chatbot, system_prompt],
+        api_name=False,
+        queue=False,
+    ).success(
         fn=display_input,
         inputs=[saved_input, chatbot],
         outputs=chatbot,
