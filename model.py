@@ -11,7 +11,6 @@ if torch.cuda.is_available():
         model_id,
         torch_dtype=torch.bfloat16,
         device_map='auto',
-        use_auth_token=True,
         use_cache=True,
     )
 else:
