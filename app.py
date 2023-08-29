@@ -363,7 +363,7 @@ graphvizで、AからB、BからC、CからAに有向エッジが生えている
         inputs=textbox,
         outputs=[textbox, chatbot],
         fn=process_example,
-        cache_examples=True,
+        cache_examples=False,
     )
 
     gr.Markdown(DESCRIPTION)
