@@ -5,7 +5,7 @@ from typing import Iterator
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
 
-model_id = '4bit/ELYZA-japanese-Llama-2-7b-instruct'
+model_id = '/content/model'
 if torch.cuda.is_available():
     model = AutoModelForCausalLM.from_pretrained(
         model_id,

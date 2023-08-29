@@ -4,7 +4,7 @@ import time
 from typing import Iterator
 import uuid
 
-import boto3
+# import boto3
 from botocore.config import Config
 import gradio as gr
 import pandas as pd
@@ -51,20 +51,20 @@ DESCRIPTION = """
 if not torch.cuda.is_available():
     DESCRIPTION += '\n<p>Running on CPU 🥶 This demo does not work on CPU.</p>'
 
-s3 = boto3.client(
-    "s3",
-    aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-    aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
-    region_name=os.environ["S3_REGION"],
-    config=Config(
-        connect_timeout=5,
-        read_timeout=5,
-        retries={
-            "mode": "standard",
-            "total_max_attempts": 3,
-        }
-    )
-)
+# s3 = boto3.client(
+#     "s3",
+#     aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+#     aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+#     region_name=os.environ["S3_REGION"],
+#     config=Config(
+#         connect_timeout=5,
+#         read_timeout=5,
+#         retries={
+#             "mode": "standard",
+#             "total_max_attempts": 3,
+#         }
+#     )
+# )
 
 def clear_and_save_textbox(message: str) -> tuple[str, str]:
     return '', message
@@ -192,11 +192,11 @@ def output_log(history: list[tuple[str, str]], uuid_list: list[tuple[str, str]])
     }
     try:
         csv_buffer = pd.DataFrame(d, index=[0]).to_csv(index=None)
-        s3.put_object(
-            Bucket=os.environ["S3_BUCKET"],
-            Key=f"{os.environ['S3_KEY_PREFIX']}/{yyyymmdd}/{record_uuid}.csv",
-            Body=csv_buffer
-        )
+        # s3.put_object(
+        #     Bucket=os.environ["S3_BUCKET"],
+        #     Key=f"{os.environ['S3_KEY_PREFIX']}/{yyyymmdd}/{record_uuid}.csv",
+        #     Body=csv_buffer
+        # )
     except:
         pass
     return
