@@ -6,7 +6,7 @@ colorTo: gray
 sdk: gradio
 sdk_version: 3.41.0
 app_file: app.py
-pinned: false
+pinned: true
 suggested_hardware: a10g-small
 duplicated_from: elyza/ELYZA-japanese-Llama-2-7b-instruct-demo
 ---
